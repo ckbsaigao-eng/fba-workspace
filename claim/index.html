@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="导入索赔资料并生成货件装箱单">
+  <title>ClaimFlow · 索赔装箱单工作台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="work-unified.css">
+<style>.sidebar{display:none!important}.main{width:100%}</style></head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a href="#" class="brand"><span class="brand-mark">▥</span><span><strong>ClaimFlow</strong><small>索赔装箱单工作台</small></span></a>
+    <div class="nav-label">工作空间</div>
+    <nav aria-label="主导航">
+      <button class="nav-link active" data-view="workspace"><span>▦</span> 装箱单生成</button>
+    </nav>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="crumb">工作空间</span><span class="slash">/</span><span>装箱单生成</span></div><span class="privacy"><i></i> 数据保存在当前浏览器</span></header>
+    <div class="content" id="workspaceSection">
+      <section class="work-hero"><div><div class="eyebrow">CLAIM PACKING LIST</div><h1>让索赔装箱，简单一点</h1><p>上传运营索赔资料，匹配产品信息，生成标准装箱单。</p></div><div class="work-steps" aria-label="工作流程"><span><b>1</b>上传资料</span><span><b>2</b>检查并补充</span><span><b>3</b>导出装箱单</span></div></section>
+      <section class="work-upload"><div class="work-upload-row"><label class="upload-card claim-dropzone" id="claimDropzone" for="claimFile"><span class="upload-icon">⇧</span><strong>点击选择文件，或拖放到这里</strong><small>支持索赔资料的 XLSX / XLS / CSV 文件</small><input type="file" id="claimFile" accept=".xlsx,.xls,.csv" aria-label="选择运营索赔资料"></label><div class="work-upload-help"><strong>上传后，核对货件信息</strong><p>系统自动匹配产品资料，确认内容后可下载 Word 装箱单。</p><div id="status" class="status" role="status">等待导入资料。</div></div></div><div class="work-upload-footer"><button id="templateBtn" class="button button-ghost" type="button">↓ 下载索赔录入表模板</button><span>数据在当前浏览器处理</span></div></section>
+      <div class="work-note">请在导出前核对货件、产品、数量、价格与运费等信息。</div>
+      <div class="section-title list-heading"><div><span class="eyebrow">SHIPMENTS</span><h2>货件列表 <span class="subtle">Shipment list</span></h2></div><button id="exportAllBtn" class="button button-dark">批量下载 Word <span>↓</span></button></div>
+      <div id="batchStatus" class="status" role="status" aria-live="polite">可生成的货件将打包下载。</div>
+      <section class="panel table-panel"><div class="panel-intro"><div><strong>本次导入的货件</strong><p>选择货件后，可在下方查看装箱单</p></div><span class="hint-pill">一货件一份装箱单</span></div><div class="table-wrap"><table id="shipments"><thead><tr><th>货件 / 参考编号</th><th>商品数</th><th>发货数量</th><th>匹配状态</th><th></th></tr></thead><tbody><tr><td colspan="5" class="empty">尚未导入货件资料</td></tr></tbody></table></div></section>
+      <div class="section-title preview-heading"><div><span class="eyebrow">DOCUMENT PREVIEW</span><h2>装箱单预览 <span class="subtle">Packing list</span></h2></div><button id="exportBtn" class="button button-outline">下载当前 Word <span>↓</span></button></div>
+      <div id="downloadStatus" class="status" role="status" aria-live="polite">选择货件后可下载 Word。</div>
+      <section class="preview-container"><div class="preview-toolbar"><span><i></i> 文档预览</span><span>Word · 可编辑</span></div><div id="preview" class="paper"><div class="preview-empty"><div>▤</div><strong>你的装箱单将显示在这里</strong><p>上传资料后选择一个货件。</p></div></div></section>
+      <footer>ClaimFlow <span>·</span> 索赔装箱单工作台</footer>
+    </div>
+    <div class="content hidden" id="productsSection">
+      <h2>基础数据维护</h2><p>数据仅保存在当前浏览器；使用同类导出文件更新对应资料。</p><div class="upload-grid"><label class="upload-card">更新 Listing 对照表<input id="listingUpdate" type="file" accept=".xlsx,.xls"></label><label class="upload-card">更新产品成本及重量<input id="catalogUpdate" type="file" accept=".xlsx,.xls"></label><label class="upload-card">更新地址库<input id="addressUpdate" type="file" accept=".xlsx,.xls"></label></div><p id="maintenanceStatus" role="status"></p><div class="hidden">
+      <section class="heading"><div><div class="eyebrow">PRODUCT LIBRARY</div><h1>产品资料 <span>管理</span></h1><p>管理导入的领星产品数据，用于匹配采购单价。</p></div></section>
+      <section class="panel product-panel"><div class="panel-intro"><div><strong>已导入的产品</strong><p>重新导入领星数据可更新产品资料</p></div><label for="productFile" class="button button-dark">导入 / 更新产品 <span>↗</span></label></div><div class="table-wrap"><table id="productsTable"><thead><tr><th>账号</th><th>FNSKU</th><th>商品名称</th><th>采购单价</th><th>海关编码</th></tr></thead><tbody><tr><td colspan="5" class="empty">尚未导入产品资料</td></tr></tbody></table></div></section>
+      <div class="notice"><strong>关于产品匹配</strong><p>系统依据账号和 FNSKU 匹配产品。导入前请确认表格包含采购单价；不确定的信息会在生成前提示。</p></div>
+    </div></div>
+  </main>
+</div>
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="vendor/docx.js"></script>
+<script src="vendor/jszip.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
